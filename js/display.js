@@ -1,10 +1,12 @@
 function getData(url){
 	console.log('blah'); 
-	$.getJSON(url, 
-             function(data) {
-                  //$('#content').html('The artist is: ' + data.query.results.json.artist + '<br/><br/>');
-              	console.log(data);
-			 }); 
+	$.getJSON(url, {
+		dataType: "jsonp"
+	  })
+		 .done(function(data) {
+			  //$('#content').html('The artist is: ' + data.query.results.json.artist + '<br/><br/>');
+			console.log(data);
+		 });
 }
 
 $(document).ready(function() {
