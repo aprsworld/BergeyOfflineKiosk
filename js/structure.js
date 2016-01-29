@@ -25,6 +25,15 @@ valuesElement.prototype = {
 
 var currentValues = function() {
 	this.setType('currentValues');
+	this.date;
+	this.status;
+	this.acVoltage;
+	this.dcCurrent;
+	this.acFrequency;
+	this.outputPower; //watts
+	this.energy_produced; //watts
+	
+	
 }
 extend(currentValues, valuesElement);
 /***********************************************************************************
@@ -33,5 +42,18 @@ extend(currentValues, valuesElement);
 
 var historicalValues = function() {
 	this.setType('historicalValues');
+	this.plotArray = [];
+	this.totalKwHrs;
+	this.totalKw;
 }
 extend(historicalValues, valuesElement);
+
+historicalValues.prototype.updateArray = function(xVal, yVal) {
+	console.log(xVal+ " "+yVal);
+	this.plotArray.push([xVal, yVal]);
+	console.log(this.plotArray);
+}
+
+historicalValues.prototype.updateTotalKw = function(){
+	
+}

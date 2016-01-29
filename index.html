@@ -4,12 +4,39 @@
 	
 	
 <script src="external/jquery-2.1.4.min.js"></script>	
+	<script src="js/gauge.min.js"></script>
+	<script src="js/jquery.flot.js"></script>
+	<script src="js/jquery.flot.time.js"></script>
+	<script src="js/jquery.flot.threshold.js"></script>
+	
 <script type="text/javascript" src="js/structure.js"></script>
 <script type="text/javascript" src="js/display.js"></script>	
 <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 	
 <body>
-	
+	<div class="flex-container">
+		<div class="flex-item">
+			<div class="flotTitle">
+				<h1> Wind Turbine </h1>
+			</div>
+			<div id="flot">
+				
+			</div>
+		</div>
+		<div class="flex-item">
+			<div class="nested-flex-item">
+				<h2> Last [time frame] </h2>
+			</div>
+			<div class="nested-flex-item">
+				<h2> Since Installation</h2>
+			</div>
+		</div>
+		<div class="flex-item">
+			<canvas id="gauge"></canvas>
+			<div id="console"></div>
+		</div>
+	</div>
+</div>
 </body>
 </html>
