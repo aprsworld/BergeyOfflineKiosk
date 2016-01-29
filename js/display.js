@@ -92,26 +92,26 @@ function constructPlot() {
 	var data = [ ];
 	var options = {
 		xaxis: {
-		mode: "time",
-		tickSize: [2, "second"],
-		tickFormatter: function (v, axis) {
-			var date = new Date(v);
-			console.log((date.getSeconds() % 20)+"");
-			if (date.getSeconds() % 20 == 0) {
-				var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-				var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-				var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+			mode: "time",
+			tickSize: [2, "second"],
+			tickFormatter: function (v, axis) {
+				var date = new Date(v);
+				console.log((date.getSeconds() % 20)+"");
+				if (date.getSeconds() % 20 == 0) {
+					var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+					var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+					var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 
-				return hours + ":" + minutes + ":" + seconds;
-			} else {
-				return "";
-			}
-   		 },
-		axisLabel: "Time",
-		axisLabelUseCanvas: true,
-		axisLabelFontSizePixels: 12,
-		axisLabelFontFamily: 'Verdana, Arial',
-		axisLabelPadding: 10
+					return hours + ":" + minutes + ":" + seconds;
+				} else {
+					return "";
+				}
+			 },
+			axisLabel: "Time",
+			axisLabelUseCanvas: true,
+			axisLabelFontSizePixels: 12,
+			axisLabelFontFamily: 'Verdana, Arial',
+			axisLabelPadding: 10
 		},
 		yaxes: [{
 			show: true,

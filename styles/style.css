@@ -31,7 +31,7 @@ body, html{
     align-self: auto;
     background-color: #eee;
 	height: 60vh;
-	min-height: 450px;
+	min-height: 550px;
 }
 
 .flex-item:nth-child(2) {

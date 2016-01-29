@@ -50,7 +50,7 @@ extend(historicalValues, valuesElement);
 
 historicalValues.prototype.updateArray = function(xVal, yVal) {
 	console.log(xVal+ " "+yVal);
-	this.plotArray.push([xVal, yVal]);
+	this.plotArray.push([xVal/1000, yVal]);
 	console.log(this.plotArray);
 }
 
