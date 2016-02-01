@@ -3,36 +3,56 @@
 	keeps track of new data values updated every 10 seconds
 */
 var newData = new currentValues();
+
+/*
+	object created from structure.js
+	keeps track of historical data over the cource of the session
+*/
 var plotData = new historicalValues();
-var gauge;
-var plot;
+
+//guage object
+var gauge = {};
+
+//plot object
+var plot = {};
+
+//url
+var jsonURL = 'http://192.168.6.100:8080/data/now.json';
 
 function getData(url){
 	console.log('blah'); 
 	$.getJSON(url, {
-		dataType: "json",
+		dataType: "application/json",
 		cache: false
 	  })
 		 .done(function(data) {
-			  //$('#content').html('The artist is: ' + data.query.results.json.artist + '<br/><br/>');
 			console.log(data);
 			newData.date = Date.now();
-			newData.status = data.inverter_systemStateTest;
-			newData.acVoltage = data.inverter_ac_voltage;
+			newData.status = checkStatus(parseInt(data.data[2].sampleValue));
+			newData.acVoltage = data.data[5].avg; //data.inverter_ac_voltage;
 			newData.acFrequency = data.inverter_ac_frequency;
-			newData.dcCurrent = data.inverter_dc_current;
+			newData.dcCurrent = data.data[6].avg; //data.inverter_dc_current;
 			newData.dcVoltage = data.inverter_dc_voltage;
-			newData.outputPower = data.inverter_output_power;
-			newData.energy_produced = data.inverter_energy_produced;
-		
+			newData.outputPower = data.data[4].avg; //data.inverter_output_power;
+			newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
+
 			//update gauge
 			gauge.setValue(newData.outputPower/1000);
 		
 			//update historical object		
 			plotData.updateArray(Date.now(), newData.outputPower/1000);
+			plotData.updateTotalKwh(Math.round(newData.energy_produced));
+						
+		
+			//load values into page 
+			$("#total-kWh").text(plotData.totalKwHrs.toLocaleString()+" kWh");
+			$("#total-co2").text(plotData.totalCo2+" tons");
+			$("#currentOutput").text(newData.outputPower.toLocaleString());
+
+			$("#runningState").text(newData.status);
 		
 			//update flot diagram		
-			plot.setData(plotData.plotArray);
+			plot.setData([plotData.plotArray]);
 			plot.setupGrid(); 
 			plot.draw();
 			console.log(newData);
@@ -50,6 +70,56 @@ function updateTables(){
 	
 }
 
+function checkStatus(systemState){
+	switch(systemState) {
+		case 5:
+			$("#runningState").css("color", "orange");
+			return "Waiting For Wind";
+			break;
+		case 9:
+			return "Running";
+			break;
+		case 0:
+			return "INIT_PROCESSOR";
+			break;
+		case 1:
+			return "INIT_PARAMS";
+			break;
+		case 2:
+			return "RESET";
+			break;
+		case 3:
+			return "WAITING INITIALIZING (STARTING COUNTDOWN)";
+			break;
+		case 4:
+			return "WAITING INITIALIZING (COUNTDOWN DELAY)";
+			break;
+		case 6:
+			return "AC_RUN_INIT";
+			break;
+		case 7:
+			return "AC_RUNNING";
+			break;
+		case 8:
+			return "DC_RUN_INIT";
+			break;
+		case 10:
+			return "FAULT_INIT";
+			break;
+		case 11:
+			return "FAULT";
+			break;
+		case 12:
+			return "MANUAL STOP (PRESS RESET)";
+			break;
+		case 13:
+			return "MANRESET";
+			break;	
+		case 14:
+			return "FAULT LIMIT (PRESS RESET)";
+			break;
+	}
+}
 
 function showGauge() {
 
@@ -92,12 +162,28 @@ function constructPlot() {
 	var data = [ ];
 	var options = {
 		xaxis: {
+			lines: {
+				show: true,
+				fill: 1,
+				lineWidth: 0
+			},
+			points: {
+                show: true
+            },
+			color: '#00ff00',
+			threshold: [{
+				below: 0,
+				color: '#f04040'
+			}, {
+				below: (14000 / 1000), //watts to kW
+				color: '#008000'
+			}],
 			mode: "time",
-			tickSize: [2, "second"],
+			tickSize: [1, "hour"],
 			tickFormatter: function (v, axis) {
 				var date = new Date(v);
 				console.log((date.getSeconds() % 20)+"");
-				if (date.getSeconds() % 20 == 0) {
+				if (date.getSeconds() % 2 == 0) {
 					var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
 					var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
 					var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
@@ -138,8 +224,8 @@ function constructPlot() {
 $(document).ready(function() {
 	constructPlot();
 
-	getData('http://mybergey.aprsworld.com/data/jsonMyBergey.php?station_id=A2675')
-	setInterval(function() {getData('http://mybergey.aprsworld.com/data/jsonMyBergey.php?station_id=A2675')},10000);
+	getData(jsonURL)
+	setInterval(function() {getData(jsonURL)},10000);
 	showGauge();
 	//$.plot($("#flot"), [ [[0, 0], [1, 14], [2, 5]] ], { yaxis: { max: 14 } });
 });
