@@ -18,7 +18,7 @@ var plot = {};
 
 //url
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
-
+var startTime;
 function getData(url){
 	console.log('blah'); 
 	$.getJSON(url, {
@@ -71,12 +71,14 @@ function updateTables(){
 }
 
 function checkStatus(systemState){
+	$("#runningState").css("color", "red");
 	switch(systemState) {
 		case 5:
-			$("#runningState").css("color", "orange");
+			$("#runningState").css("color", "brown");
 			return "Waiting For Wind";
 			break;
 		case 9:
+			$("#runningState").css("color", "green");
 			return "Running";
 			break;
 		case 0:
@@ -162,6 +164,11 @@ function constructPlot() {
 	var data = [ ];
 	var options = {
 		xaxis: {
+			show: true,
+			position: 'bottom',
+			mode: "time",
+			min: startTime,
+			color: '#00ff00',
 			lines: {
 				show: true,
 				fill: 1,
@@ -170,7 +177,6 @@ function constructPlot() {
 			points: {
                 show: true
             },
-			color: '#00ff00',
 			threshold: [{
 				below: 0,
 				color: '#f04040'
@@ -178,8 +184,7 @@ function constructPlot() {
 				below: (14000 / 1000), //watts to kW
 				color: '#008000'
 			}],
-			mode: "time",
-			tickSize: [1, "hour"],
+			tickSize: [24, "hour"],
 			tickFormatter: function (v, axis) {
 				var date = new Date(v);
 				console.log((date.getSeconds() % 20)+"");
@@ -223,8 +228,9 @@ function constructPlot() {
 
 $(document).ready(function() {
 	constructPlot();
-
-	getData(jsonURL)
+	startTime = new Date().getMilliseconds();
+	console.log(startTime);
+	getData(jsonURL);
 	setInterval(function() {getData(jsonURL)},10000);
 	showGauge();
 	//$.plot($("#flot"), [ [[0, 0], [1, 14], [2, 5]] ], { yaxis: { max: 14 } });
