@@ -16,12 +16,18 @@ var gauge = {};
 //plot object
 var plot = {};
 
-//url
+//URL
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
+//historical URL
 var historicalURL = 'http://192.168.6.100:8080/data/dayStats.json';
+//sets the conversion rate for kWh to tons of CO2
 var co2_conversion = 1.155;
+//variable that holds pageload timestamp
 var startTime;
+//variable that keeps track of elapsed time since page load
 var diffTime;
+
+//gets data from now.json
 function getData(url){
 	$.getJSON(url, {
 		dataType: "application/json",
@@ -54,9 +60,9 @@ function getData(url){
 			$("#total-co2").html('<i class="fa fa-trash"></i> ' +plotData.totalCo2+" tons");
 			$("#currentOutput").text(newData.outputPower.toLocaleString());
 			$("#runningState").text(newData.status);
-			$("#acFrequency").text(newData.acFrequency);	
-			$("#acVoltage").text(newData.acVoltage);
-			$("#dcCurrent").text(newData.dcCurrent);
+			$("#acFrequency").text(" @ "+newData.acFrequency+" Hz");	
+			$("#acVoltage").text(newData.acVoltage+" VAC");
+			$("#dcCurrent").text(" @ "+newData.dcCurrent+" amps");
 		
 		
 			console.log(newData.date-startTime);
@@ -76,6 +82,7 @@ function getData(url){
 		});
 }
 
+//gets historical data from seperate json file
 function getHistorical(url){
 	$.getJSON(url, {
 		dataType: "application/json",
@@ -119,14 +126,11 @@ function formatTicks(){
 		plot.getOptions().xaxes[0].tickSize= [4, "hour"];
 	}
 	else {
-		plot.getOptions().xaxes[0].tickSize= [8, "hour"];
+		plot.getOptions().xaxes[0].tickSize= [12, "hour"];
 	}
 }
 
-function updateTable(){
-	
-}
-
+//gets status integer from json and decodes into appropriate string
 function checkStatus(systemState){
 	$("#runningState").css("color", "red");
 	switch(systemState) {
@@ -180,6 +184,7 @@ function checkStatus(systemState){
 	}
 }
 
+//Constructs and draws the gauge
 function showGauge() {
 
 	gauge = new Gauge({
@@ -217,6 +222,8 @@ function showGauge() {
 	gauge.draw();
 };
 
+
+//constructs and draws plot
 function constructPlot() {
 	startTime = Date.now();
 	var data = [ ];
@@ -241,7 +248,7 @@ function constructPlot() {
 			timezone: "browser",
 			tickSize: [10, "second"],
 			timeformat: "%m/%d/%y <br> %h:%M:%S",
-			axisLabel: "Time",
+			axisLabel: "Elapsed Time",
 			axisLabelUseCanvas: false,
 			axisLabelFontSizePixels: 12,
 			axisLabelFontFamily: 'Verdana, Arial',
@@ -250,9 +257,9 @@ function constructPlot() {
 		yaxes: [{
 			show: true,
 			position: "left",
-			axisLabel: "kW",
-			axisLabelUseCanvas: true,
-			axisLabelFontSizePixels: 12,
+			axisLabel: "Kilowatts",
+			axisLabelUseCanvas: false,
+			axisLabelFontSizePixels: 16,
 			axisLabelFontFamily: 'sans-serif',
 			max: 14,
 			min: 0,
@@ -271,9 +278,6 @@ function constructPlot() {
 	plot = $.plot($("#flot"), data, options);
 }
 
-function setTicks(){
-	
-}
 
 $(document).ready(function() {
 	constructPlot();

@@ -118,13 +118,15 @@ body, html{
 }
 .powerReadingChild{
 	float: right;
-	width: 30%;
+	width: 50%;
 	min-width: 105px;
 	height: auto;
+	text-align: center;
 }
-.powerReadingChild span:nth-child(2){
+.powerReadingChild span:nth-child(2), .powerReadingChild span:nth-child(3){
 	color: green;	
-	font-size: 18px;
+	font-size: 24px;
+	font-weight: 700;
 }
 .powerLabel{
 	display: block;	
@@ -140,8 +142,6 @@ body, html{
 	color: green;
 	font-weight: 700;
 	font-size: 30px;
-}
-#gauge{
 }
 .currentValues{
 	height: 40px;
@@ -176,4 +176,7 @@ h2{
 }
 .bold{
 	font-weight: 700;	
+}
+.axislabels{
+	color: #333;	
 }

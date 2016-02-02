@@ -9,7 +9,7 @@
 <script src="js/jquery.flot.js"></script>
 <script src="js/jquery.flot.time.js"></script>
 <script src="js/jquery.flot.threshold.js"></script>
-<script src="js/jquery.flot.labels.js"></script>
+<script src="js/jquery.flot.axislabels.js"></script>
 
 <script type="text/javascript" src="js/structure.js"></script>
 <script type="text/javascript" src="js/display.js"></script>	
@@ -40,9 +40,8 @@
 				<div class="panelDivider">
 					<h2> Current Power Readings </h2>
 					<div class="powerReadings">
-						<div class="powerReadingChild"><span class="powerLabel"> AC Voltage</span><span id="acVoltage"> Loading... </span></div>
-						<div class="powerReadingChild"><span class="powerLabel"> AC Frequency</span><span id="acFrequency"> Loading... </span></div>
-						<div class="powerReadingChild"><span class="powerLabel"> DC current</span><span id="dcCurrent"> Loading... </span></div>
+						<div class="powerReadingChild"><span class="powerLabel"> AC </span><span id="acVoltage"> Loading... </span> <span id="acFrequency"></span></div>
+						<div class="powerReadingChild"><span class="powerLabel"> DC </span><span id="dcCurrent"> Loading... </span> </div>
 					</div>
 				</div>
 			</div>
