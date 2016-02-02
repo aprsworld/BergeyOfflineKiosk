@@ -19,6 +19,7 @@ var plot = {};
 //url
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
 var startTime;
+var diffTime;
 function getData(url){
 	console.log('blah'); 
 	$.getJSON(url, {
@@ -35,7 +36,7 @@ function getData(url){
 			newData.dcVoltage = data.inverter_dc_voltage;
 			newData.outputPower = data.data[4].avg; //data.inverter_output_power;
 			newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
-
+			diffTime = newData.date - startTime;
 			//update gauge
 			gauge.setValue(newData.outputPower/1000);
 		
@@ -50,7 +51,8 @@ function getData(url){
 			$("#currentOutput").text(newData.outputPower.toLocaleString());
 
 			$("#runningState").text(newData.status);
-		
+			console.log(newData.date-startTime);
+			
 			//update flot diagram		
 			plot.setData([plotData.plotArray]);
 			plot.setupGrid(); 
@@ -64,6 +66,28 @@ function getData(url){
 		.always(function() {
 			console.log("completed");
 		});
+}
+
+function formatTicks(){
+	if(diffTime < 30*60000){
+		console.log(true);
+		plot.getOptions().xaxes[0].tickSize= [1, "minute"];
+	}
+	else if(diffTime < (60*60000)){
+		plot.getOptions().xaxes[0].tickSize= [10, "minute"];
+	}
+	else if(diffTime < (6*60*60000)){
+		plot.getOptions().xaxes[0].tickSize= [30, "minute"];
+	}
+	else if(diffTime < (24*60*60000)){
+		plot.getOptions().xaxes[0].tickSize= [1, "hour"];
+	}
+	else if(diffTime < (2*24*60*60000)){
+		plot.getOptions().xaxes[0].tickSize= [4, "hour"];
+	}
+	else {
+		plot.getOptions().xaxes[0].tickSize= [8, "hour"];
+	}
 }
 
 function updateTables(){
@@ -163,46 +187,36 @@ function showGauge() {
 function constructPlot() {
 	var data = [ ];
 	var options = {
+		color: 'green',
+		lines: {
+			show: true,
+			fill: 1,
+			fillColor: 'rgba(0, 255, 0, 0.60)',
+			lineWidth: 1
+		},
+		points: {
+			show: true,
+			fill: 1,
+			fillColor: 'rgba(0, 255, 0, 0.60)',
+		},
+		threshold: [{
+			below: 6,
+			color: 'green'
+		}, {
+			below: (14000 / 1000), //watts to kW
+			color: 'green'
+		}],
 		xaxis: {
 			show: true,
 			position: 'bottom',
 			mode: "time",
-			min: startTime,
-			color: '#00ff00',
-			lines: {
-				show: true,
-				fill: 1,
-				lineWidth: 0
-			},
-			points: {
-                show: true
-            },
-			threshold: [{
-				below: 0,
-				color: '#f04040'
-			}, {
-				below: (14000 / 1000), //watts to kW
-				color: '#008000'
-			}],
-			tickSize: [24, "hour"],
-			tickFormatter: function (v, axis) {
-				var date = new Date(v);
-				console.log((date.getSeconds() % 20)+"");
-				if (date.getSeconds() % 2 == 0) {
-					var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-					var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-					var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-					return hours + ":" + minutes + ":" + seconds;
-				} else {
-					return "";
-				}
-			 },
+			tickSize: [10, "second"],
+			timeFormat: "%m/%d/%y %h:%M:%S",
 			axisLabel: "Time",
 			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 12,
 			axisLabelFontFamily: 'Verdana, Arial',
-			axisLabelPadding: 10
+			axisLabelPadding: 3
 		},
 		yaxes: [{
 			show: true,
@@ -219,16 +233,21 @@ function constructPlot() {
 			axisLabelFontFamily: 'Verdana, Arial',
 			max: 14,
 			min: 0,
-		 	yaxis: 1	
+		 	yaxis: 2	
 		}]
 	}
 	
 	plot = $.plot($("#flot"), data, options);
 }
 
+function setTicks(){
+	
+}
+
 $(document).ready(function() {
 	constructPlot();
-	startTime = new Date().getMilliseconds();
+	startTime = Date.now();
+	plot.getOptions().xaxis.min = startTime;
 	console.log(startTime);
 	getData(jsonURL);
 	setInterval(function() {getData(jsonURL)},10000);
