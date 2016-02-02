@@ -31,7 +31,7 @@ function getData(url){
 			newData.date = Date.now();
 			newData.status = checkStatus(parseInt(data.data[2].sampleValue));
 			newData.acVoltage = data.data[5].avg; //data.inverter_ac_voltage;
-			newData.acFrequency = data.inverter_ac_frequency;
+			newData.acFrequency = data.data[7].sampleValue;
 			newData.dcCurrent = data.data[6].avg; //data.inverter_dc_current;
 			newData.dcVoltage = data.inverter_dc_voltage;
 			newData.outputPower = data.data[4].avg; //data.inverter_output_power;
@@ -49,11 +49,15 @@ function getData(url){
 			//plotData.updateSinceLoad(diffTime);
 			//console.log(total);
 			//load values into page 
-			$("#total-kWh").text(plotData.totalKwHrs.toLocaleString()+" kWh");
-			$("#total-co2").text(plotData.totalCo2+" tons");
+			$("#total-kWh").html('<i class="fa fa-leaf"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
+			$("#total-co2").html('<i class="fa fa-trash"></i> ' +plotData.totalCo2+" tons");
 			$("#currentOutput").text(newData.outputPower.toLocaleString());
 			$("#runningState").text(newData.status);
-			
+			$("#acFrequency").text(newData.acFrequency);	
+			$("#acVoltage").text(newData.acVoltage);
+			$("#dcCurrent").text(newData.dcCurrent);
+		
+		
 			console.log(newData.date-startTime);
 			formatTicks();
 			//update flot diagram		
@@ -95,8 +99,11 @@ function formatTicks(){
 		console.log(true);
 		plot.getOptions().xaxes[0].tickSize= [10, "second"];
 	}
-	else if(diffTime < (10*60000)){
+	else if(diffTime < (5*60000)){
 		plot.getOptions().xaxes[0].tickSize= [30, "second"];
+	}
+	else if(diffTime < (10*60000)){
+		plot.getOptions().xaxes[0].tickSize= [1, "minute"];
 	}
 	else if(diffTime < (60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [10, "minute"];
@@ -234,7 +241,7 @@ function constructPlot() {
 			tickSize: [10, "second"],
 			timeformat: "%m/%d/%y <br> %h:%M:%S",
 			axisLabel: "Time",
-			axisLabelUseCanvas: true,
+			axisLabelUseCanvas: false,
 			axisLabelFontSizePixels: 12,
 			axisLabelFontFamily: 'Verdana, Arial',
 			axisLabelPadding: 3

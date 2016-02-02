@@ -8,14 +8,21 @@ body, html{
 	box-sizing: border-box;
 
 }
+
+.reveal .fa {
+  font-family: 'FontAwesome';
+  font-style: normal;
+}
+
 .flotTitle{
-	width: 300px;
+	width: 320px;
 	height: auto;
 }
 .flotTitle h1{
 	margin: 0;
 	padding: 5px;
 	color: #333;
+	font-size: 36px;
 }
 #status{
 	padding: 5px;
@@ -80,6 +87,7 @@ body, html{
 .nested-flex-item:nth-child(1) {
 	order: 1;
 	flex-grow: 1;
+	z-index: 2;
 }
 
 .nested-flex-item:nth-child(2) {
@@ -96,6 +104,7 @@ body, html{
 	min-height: 350px;
     max-width: 20%;
 	min-width: 320px;
+	padding-top: 25px;	
 
 }
 .panelDivider{
@@ -104,13 +113,22 @@ body, html{
 	
 }
 .powerReadings{
-	width: 50%;
-	float: left;
 	height: auto;
 	min-height: 100px;
 }
+.powerReadingChild{
+	float: right;
+	width: 30%;
+	min-width: 105px;
+	height: auto;
+}
+.powerReadingChild span:nth-child(2){
+	color: green;	
+	font-size: 18px;
+}
 .powerLabel{
 	display: block;	
+	font-size: 20px;
 }
 #flot{
 	margin: auto;
@@ -118,23 +136,20 @@ body, html{
 	width: 95%;
 	height: 550px;
 }
-
-.currentValues{
-	font-size: 28px;
-	text-align: center;
-}
 #currentOutput{
 	color: green;
 	font-weight: 700;
 	font-size: 30px;
 }
 #gauge{
-	margin-top: 15px;	
 }
 .currentValues{
-	height: 50px;
+	height: 40px;
 	width: 100%;
 	color: #333;
+	font-size: 28px;
+	text-align: center;
+	padding: 5px;
 }
 h2{
 	font-size: 30px;
