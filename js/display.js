@@ -188,7 +188,7 @@ function showGauge() {
 		strokeTicks : true,
 		highlights  : [
 			{ from : 0,   to : 10, color : 'rgba(0,   0, 0, .0)' },
-			{ from : 10, to : 14, color : 'rgba(0, 255,  0, .85)' }
+			{ from : 10, to : 14, color : 'green' }
 		],
 		animation : {
 			delay    : 0,
@@ -210,31 +210,27 @@ function showGauge() {
 };
 
 function constructPlot() {
+	startTime = Date.now();
 	var data = [ ];
 	var options = {
-		color: 'green',
+		colors: ["green"],
 		lines: {
 			show: true,
 			fill: 1,
+			color: "green",
 			fillColor: 'rgba(0, 255, 0, 0.60)',
-			lineWidth: 1
+			lineWidth: 3
 		},
 		points: {
 			show: true,
 			fill: 1,
-			fillColor: 'rgba(0, 255, 0, 0.60)',
+			fillColor: "green",
 		},
-		threshold: [{
-			below: 6,
-			color: 'green'
-		}, {
-			below: (14000 / 1000), //watts to kW
-			color: 'green'
-		}],
 		xaxis: {
 			show: true,
 			position: 'bottom',
 			mode: "time",
+			timezone: "browser",
 			tickSize: [10, "second"],
 			timeFormat: "%m/%d/%y %h:%M:%S",
 			axisLabel: "Time",
