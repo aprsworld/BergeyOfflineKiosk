@@ -56,9 +56,9 @@ historicalValues.prototype.updateArray = function(xVal, yVal) {
 	console.log(this.plotArray);
 }
 
-historicalValues.prototype.updateTotalKwh = function(kwh){
+historicalValues.prototype.updateTotalKwh = function(kwh, conversion){
 	this.totalKwHrs = kwh;
-	this.totalCo2 = Math.round(kwh*1.13/2204.62*100)/100;
+	this.totalCo2 = Math.round(kwh*conversion/2204.62*100)/100;
 }
 
 historicalValues.prototype.updateSinceLoad = function(time){

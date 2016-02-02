@@ -19,6 +19,7 @@ var plot = {};
 //url
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
 var historicalURL = 'http://192.168.6.100:8080/data/dayStats.json';
+var co2_conversion = 1.155;
 var startTime;
 var diffTime;
 function getData(url){
@@ -42,7 +43,7 @@ function getData(url){
 		
 			//update historical object		
 			plotData.updateArray(Date.now(), newData.outputPower/1000);
-			plotData.updateTotalKwh(Math.round(newData.energy_produced));
+			plotData.updateTotalKwh(Math.round(newData.energy_produced), co2_conversion);
 						
 			/*var total = plotData.plotArray.map(function(v) { return v[1] })         // second value of each
     			.reduce(function(a,b) { return a + b });  // sum*/
@@ -249,8 +250,10 @@ function constructPlot() {
 		yaxes: [{
 			show: true,
 			position: "left",
+			axisLabel: "kW",
+			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 12,
-			axisLabelFontFamily: 'Verdana, Arial',
+			axisLabelFontFamily: 'sans-serif',
 			max: 14,
 			min: 0,
 			yaxis: 1
@@ -258,7 +261,7 @@ function constructPlot() {
 			show: true,
 			position: "right",
 			axisLabelFontSizePixels: 12,
-			axisLabelFontFamily: 'Verdana, Arial',
+			axisLabelFontFamily: 'sans-serif',
 			max: 14,
 			min: 0,
 		 	yaxis: 2	
