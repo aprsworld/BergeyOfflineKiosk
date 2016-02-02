@@ -189,8 +189,8 @@ function showGauge() {
 
 	gauge = new Gauge({
 		renderTo    : 'gauge',
-		width       : 300,
-		height      : 300,
+		width       : 400,
+		height      : 400,
 		glow        : false,
 		units       : 'kW',
 		title       : 'Output Power',

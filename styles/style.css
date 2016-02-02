@@ -47,6 +47,7 @@ body, html{
     min-width: 100px;
 }
 
+/* flot chart flex */
 .flex-item:nth-child(1) {
     order: 0;
     flex: 0 1 100%;
@@ -58,6 +59,7 @@ body, html{
 	box-shadow: 0px 0px 5px #333;
 }
 
+/* current readings flex */
 .flex-item:nth-child(2) {
 	display: flex;
 	flex-direction: row;
@@ -66,9 +68,10 @@ body, html{
     justify-content: space-around;
     align-content: space-around;
    
-	order: 0;
-    flex: 1 1 auto;
+	order: 2;
+    flex: 0 1 auto;
     align-self: center;
+	flex-basis: 100%;
 	height: auto;
 	min-height: 35vh;
 	min-width: 320px;
@@ -86,18 +89,19 @@ body, html{
 
 .nested-flex-item:nth-child(1) {
 	order: 1;
-	flex-grow: 1;
+	flex-grow: 1.5;
 	z-index: 2;
 }
 
 .nested-flex-item:nth-child(2) {
-	order: 0;
-	flex-grow: 1;
+	order: 2;
+	flex-grow: .5;
 }
 
-.flex-item:nth-child(3) {
+/* gauge flex item */
+.nested-flex-item:nth-child(3) {
     order: 0;
-    flex: 1 1 auto;
+	flex-grow: .5;
     align-self: center;
     background-color: #ddd;
 	height: 35vh;
@@ -161,6 +165,7 @@ h2{
 .nested-flex-item h2{
 	margin-top: 25px;	
 }
+
 #total-kWh, #total-co2, #historicalEnergy{
 	display: block;
 	color: green;
