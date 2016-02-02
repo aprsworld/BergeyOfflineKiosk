@@ -98,7 +98,11 @@ body, html{
 	min-width: 320px;
 
 }
-
+.panelDivider{
+	width: 100%;
+	height: auto;
+	
+}
 #flot{
 	margin: auto;
 	margin-top: 10px;

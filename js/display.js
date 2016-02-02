@@ -18,10 +18,10 @@ var plot = {};
 
 //url
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
+var historicalURL = 'http://192.168.6.100:8080/data/dayStats.json';
 var startTime;
 var diffTime;
 function getData(url){
-	console.log('blah'); 
 	$.getJSON(url, {
 		dataType: "application/json",
 		cache: false
@@ -44,15 +44,18 @@ function getData(url){
 			plotData.updateArray(Date.now(), newData.outputPower/1000);
 			plotData.updateTotalKwh(Math.round(newData.energy_produced));
 						
-		
+			/*var total = plotData.plotArray.map(function(v) { return v[1] })         // second value of each
+    			.reduce(function(a,b) { return a + b });  // sum*/
+			//plotData.updateSinceLoad(diffTime);
+			//console.log(total);
 			//load values into page 
 			$("#total-kWh").text(plotData.totalKwHrs.toLocaleString()+" kWh");
 			$("#total-co2").text(plotData.totalCo2+" tons");
 			$("#currentOutput").text(newData.outputPower.toLocaleString());
-
 			$("#runningState").text(newData.status);
-			console.log(newData.date-startTime);
 			
+			console.log(newData.date-startTime);
+			formatTicks();
 			//update flot diagram		
 			plot.setData([plotData.plotArray]);
 			plot.setupGrid(); 
@@ -68,10 +71,32 @@ function getData(url){
 		});
 }
 
+function getHistorical(url){
+	$.getJSON(url, {
+		dataType: "application/json",
+		cache: false
+	  })
+		 .done(function(data) {
+			console.log(data);
+		 })
+		.fail(function(jqxhr, textStatus, error) {
+			var err = textStatus + ", " + error;
+			console.log( "Request Failed: " + err);
+		})
+		.always(function() {
+			console.log("completed");
+		});
+}
+
+
+//function that modifies ticks on flot chart so that they do not overcrowd
 function formatTicks(){
-	if(diffTime < 30*60000){
+	if(diffTime < 60000){
 		console.log(true);
-		plot.getOptions().xaxes[0].tickSize= [1, "minute"];
+		plot.getOptions().xaxes[0].tickSize= [10, "second"];
+	}
+	else if(diffTime < (10*60000)){
+		plot.getOptions().xaxes[0].tickSize= [30, "second"];
 	}
 	else if(diffTime < (60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [10, "minute"];
@@ -90,7 +115,7 @@ function formatTicks(){
 	}
 }
 
-function updateTables(){
+function updateTable(){
 	
 }
 
@@ -236,7 +261,7 @@ function constructPlot() {
 		 	yaxis: 2	
 		}]
 	}
-	
+	startTime = Date.now();
 	plot = $.plot($("#flot"), data, options);
 }
 
@@ -246,11 +271,10 @@ function setTicks(){
 
 $(document).ready(function() {
 	constructPlot();
-	startTime = Date.now();
-	plot.getOptions().xaxis.min = startTime;
 	console.log(startTime);
 	getData(jsonURL);
 	setInterval(function() {getData(jsonURL)},10000);
+	setInterval(function() {getHistorical(historicalURL)},10000);
 	showGauge();
 	//$.plot($("#flot"), [ [[0, 0], [1, 14], [2, 5]] ], { yaxis: { max: 14 } });
 });
