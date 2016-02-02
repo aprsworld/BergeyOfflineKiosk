@@ -103,11 +103,20 @@ body, html{
 	height: auto;
 	
 }
+.powerReadings{
+	width: 50%;
+	float: left;
+	height: auto;
+	min-height: 100px;
+}
+.powerLabel{
+	display: block;	
+}
 #flot{
 	margin: auto;
 	margin-top: 10px;
 	width: 95%;
-	height: 500px;
+	height: 550px;
 }
 
 .currentValues{
@@ -137,7 +146,7 @@ h2{
 .nested-flex-item h2{
 	margin-top: 25px;	
 }
-#total-kWh, #total-co2{
+#total-kWh, #total-co2, #historicalEnergy{
 	display: block;
 	color: green;
 	font-size: 48px;

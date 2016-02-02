@@ -224,7 +224,7 @@ function constructPlot() {
 		points: {
 			show: true,
 			fill: 1,
-			fillColor: "green",
+			fillColor: "green"
 		},
 		xaxis: {
 			show: true,
@@ -232,7 +232,7 @@ function constructPlot() {
 			mode: "time",
 			timezone: "browser",
 			tickSize: [10, "second"],
-			timeFormat: "%m/%d/%y %h:%M:%S",
+			timeformat: "%m/%d/%y <br> %h:%M:%S",
 			axisLabel: "Time",
 			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 12,
@@ -272,7 +272,6 @@ $(document).ready(function() {
 	setInterval(function() {getData(jsonURL)},10000);
 	setInterval(function() {getHistorical(historicalURL)},10000);
 	showGauge();
-	//$.plot($("#flot"), [ [[0, 0], [1, 14], [2, 5]] ], { yaxis: { max: 14 } });
 });
 
 //http://mybergey.aprsworld.com/data/jsonMyBergey.php?station_id=A2675&statsHours=24

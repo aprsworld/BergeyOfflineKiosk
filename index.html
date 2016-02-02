@@ -8,6 +8,7 @@
 <script src="js/jquery.flot.js"></script>
 <script src="js/jquery.flot.time.js"></script>
 <script src="js/jquery.flot.threshold.js"></script>
+<script src="js/jquery.flot.labels.js"></script>
 <script type="text/javascript" src="js/structure.js"></script>
 <script type="text/javascript" src="js/display.js"></script>	
 <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -31,9 +32,18 @@
 			<div class="nested-flex-item">
 				<div class="panelDivider">
 					<h2 id="historicalData"> Energy Produced in the Past Hour </h2>
+					<span id="historicalEnergy">[Placeholder]</span>
+
 				</div>
 				<div class="panelDivider">
 					<h2> Current Power Readings </h2>
+					<div class="powerReadings">
+						<span class="powerLabel"> AC Voltage</span><span id="acVoltage"> </span>
+						<span class="powerLabel"> AC Frequency</span><span id="acVoltage"> </span>
+					</div>
+					<div class="powerReadings">
+						<span class="powerLabel"> DC current</span><span id="dcCurrent"> </span>
+					</div>
 				</div>
 			</div>
 			
