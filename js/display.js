@@ -127,6 +127,7 @@ function getToday(){
 
 //function that modifies ticks on flot chart so that they do not overcrowd
 function formatTicks(){
+	
 	if(diffTime < 60000){
 		console.log(true);
 		plot.getOptions().xaxes[0].tickSize= [10, "second"];

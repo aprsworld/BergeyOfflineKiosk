@@ -28,8 +28,8 @@ body, html{
 	padding: 5px;
 	width: auto;
 	float: right;
-	margin-right: 10px;
-	margin-top: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
 }
 .flex-container {
     display: flex;
@@ -56,7 +56,7 @@ body, html{
 	height: auto;
 	min-height: 60vh;
 	border-bottom: 3px #333 solid;
-	box-shadow: 0px 0px 5px #333;
+	box-shadow: 0px 0px 5px green;
 }
 
 /* current readings flex */
@@ -79,17 +79,17 @@ body, html{
 }
 
 .nested-flex-item{
-	height: 35vh;
+	height: auto;
 	flex-basis: 320px;
-	min-height: 350px;
+	min-height: 400px;
 	align-self:center;
-	
 }
 
 .nested-flex-item:nth-child(1) {
 	order: 1;
-	flex-grow: 1.5;
+	flex-grow: 1.0;
 	z-index: 2;
+	border-right: green 1px solid;
 }
 
 .nested-flex-item:nth-child(2) {
@@ -100,10 +100,16 @@ body, html{
 /* gauge flex item */
 .nested-flex-item:nth-child(3) {
     order: 0;
-	flex-grow: 1;
+	flex-grow: .5;
     align-self: center;
     background-color: #ddd;
 	min-width: 320px;
+	border-right: green 1px solid;
+}
+#gauge{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 .panelDivider{
 	width: 100%;
@@ -113,6 +119,10 @@ body, html{
 .powerReadings{
 	height: auto;
 	min-height: 100px;
+	min-width: 200px;
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
 }
 .powerReadingChild{
 	float: right;
@@ -121,9 +131,14 @@ body, html{
 	height: auto;
 	text-align: center;
 }
+.powerReadingChild span:nth-child(1){
+	font-size: 30px;
+	font-weight: 700;
+	color: #333;
+}
 .powerReadingChild span:nth-child(2), .powerReadingChild span:nth-child(3){
 	color: green;	
-	font-size: 24px;
+	font-size: 38px;
 	font-weight: 700;
 }
 .powerLabel{
@@ -147,7 +162,7 @@ body, html{
 	color: #333;
 	font-size: 28px;
 	text-align: center;
-	padding: 10px 5px 5px 5px;
+	padding-top: 10px;
 }
 h2{
 	font-size: 30px;
@@ -158,13 +173,13 @@ h2{
 }
 .nested-flex-item h2{
 	margin-top: 25px;	
-	font-size: 45px;
+	font-size: 55px;
 }
 
 #total-kWh, #total-co2, #historicalEnergy{
 	display: block;
 	color: green;
-	font-size: 48px;
+	font-size: 45px;
 	font-weight: 700;
 	text-align: center;
 }

@@ -47,9 +47,23 @@ var historicalValues = function() {
 	this.totalKw;
 	this.totalCo2;
 	this.kwhSinceLoad = 0;
-	this.arrMaxLength = 6;
+	//max length of array
+	//dictated by the following format:
+	//Total-time-desired/10 seconds = array length
+	this.arrMaxLength = 8640; 
+						
 }
 extend(historicalValues, valuesElement);
+
+//interval is the number of 10 second plots you want to get rid of
+historicalValues.prototype.reconfigureArray = function(interval) {
+	var i = 0;
+	var length = this.plotArray.length;
+	var newArray = [];
+	for( i; i<= length; i+interval){
+		newArray.push(this.plotArray[i]);
+	}
+}
 
 historicalValues.prototype.updateArray = function(xVal, yVal) {
 	console.log(xVal+ " "+yVal);
