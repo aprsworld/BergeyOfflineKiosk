@@ -47,11 +47,17 @@ var historicalValues = function() {
 	this.totalKw;
 	this.totalCo2;
 	this.kwhSinceLoad = 0;
+	this.arrMaxLength = 6;
 }
 extend(historicalValues, valuesElement);
 
 historicalValues.prototype.updateArray = function(xVal, yVal) {
 	console.log(xVal+ " "+yVal);
+	if(this.plotArray.length == this.arrMaxLength){
+		console.log(this.plotArray);
+		this.plotArray.shift();
+		console.log(this.plotArray);
+	}
 	this.plotArray.push([xVal, yVal]);
 	console.log(this.plotArray);
 }
