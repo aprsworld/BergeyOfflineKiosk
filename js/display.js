@@ -19,13 +19,15 @@ var plot = {};
 //URL
 var jsonURL = 'http://192.168.6.100:8080/data/now.json';
 //historical URL
-var historicalURL = 'http://192.168.6.100:8080/data/dayStats.json';
+var historicalURL = 'http://192.168.6.100:8080/data/historyByDay.json';
 //sets the conversion rate for kWh to tons of CO2
 var co2_conversion = 1.155;
 //variable that holds pageload timestamp
 var startTime;
 //variable that keeps track of elapsed time since page load
 var diffTime;
+//stores today timestamp
+var today;
 
 //gets data from now.json
 function getData(url){
@@ -35,7 +37,7 @@ function getData(url){
 	  })
 		 .done(function(data) {
 			console.log(data);
-			newData.date = Date.now();
+			newData.date = data.data[4].time;//Date.now();
 			newData.status = checkStatus(parseInt(data.data[2].sampleValue));
 			newData.acVoltage = data.data[5].avg; //data.inverter_ac_voltage;
 			newData.acFrequency = data.data[7].sampleValue;
@@ -44,6 +46,7 @@ function getData(url){
 			newData.outputPower = data.data[4].avg; //data.inverter_output_power;
 			newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
 			diffTime = newData.date - startTime;
+			console.log(newData.date);
 			//update gauge
 			gauge.setValue(newData.outputPower/1000);
 		
@@ -63,7 +66,6 @@ function getData(url){
 			$("#acFrequency").text(" @ "+newData.acFrequency+" Hz");	
 			$("#acVoltage").text(newData.acVoltage+" VAC");
 			$("#dcCurrent").text(" @ "+newData.dcCurrent+" amps");
-		
 		
 			console.log(newData.date-startTime);
 			formatTicks();
@@ -89,7 +91,17 @@ function getHistorical(url){
 		cache: false
 	  })
 		 .done(function(data) {
+			today = getToday();
+			for(var key in data.summary_stats){
+				console.log(key);
+				if(data['summary_stats'][key]['day'] == today){
+					$('#historicalEnergy').text(Math.round(data['summary_stats'][key]['output_power_avg']).toLocaleString()+" watts");	
+						break;
+				}
+			}
+			console.log(today);
 			console.log(data);
+			
 		 })
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
@@ -98,6 +110,18 @@ function getHistorical(url){
 		.always(function() {
 			console.log("completed");
 		});
+}
+Date.prototype.yyyymmdd = function() {
+   var yyyy = this.getFullYear().toString();
+   var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+   var dd  = this.getDate().toString();
+   return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]); // padding
+};
+
+
+function getToday(){
+	var d = new Date();
+	return d.yyyymmdd();	
 }
 
 
@@ -226,6 +250,8 @@ function showGauge() {
 //constructs and draws plot
 function constructPlot() {
 	startTime = Date.now();
+	var height = $("#flot").parent().height();
+	$("#flot").height(height-50+"px");
 	var data = [ ];
 	var options = {
 		colors: ["green"],
@@ -283,6 +309,7 @@ $(document).ready(function() {
 	constructPlot();
 	console.log(startTime);
 	getData(jsonURL);
+	getHistorical(historicalURL)
 	setInterval(function() {getData(jsonURL)},10000);
 	setInterval(function() {getHistorical(historicalURL)},10000);
 	showGauge();

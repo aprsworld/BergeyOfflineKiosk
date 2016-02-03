@@ -54,7 +54,7 @@ body, html{
     align-self: auto;
     background-color: #eee;
 	height: auto;
-	min-height: 550px;
+	min-height: 60vh;
 	border-bottom: 3px #333 solid;
 	box-shadow: 0px 0px 5px #333;
 }
@@ -69,18 +69,17 @@ body, html{
     align-content: space-around;
    
 	order: 2;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     align-self: center;
-	flex-basis: 100%;
+	flex-basis: auto;
 	height: auto;
-	min-height: 35vh;
+	min-height: 40vh;
 	min-width: 320px;
-	max-width: 78%;
 
 }
 
 .nested-flex-item{
-	height: auto;
+	height: 35vh;
 	flex-basis: 320px;
 	min-height: 350px;
 	align-self:center;
@@ -101,15 +100,10 @@ body, html{
 /* gauge flex item */
 .nested-flex-item:nth-child(3) {
     order: 0;
-	flex-grow: .5;
+	flex-grow: 1;
     align-self: center;
     background-color: #ddd;
-	height: 35vh;
-	min-height: 350px;
-    max-width: 20%;
 	min-width: 320px;
-	padding-top: 25px;	
-
 }
 .panelDivider{
 	width: 100%;
@@ -164,6 +158,7 @@ h2{
 }
 .nested-flex-item h2{
 	margin-top: 25px;	
+	font-size: 45px;
 }
 
 #total-kWh, #total-co2, #historicalEnergy{
