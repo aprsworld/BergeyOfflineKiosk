@@ -21,6 +21,7 @@ var jsonURL = 'http://192.168.6.100:8080/data/now.json';
 //historical URL
 var historicalURL = 'http://192.168.6.100:8080/data/historyByDay.json';
 //sets the conversion rate for kWh to tons of CO2
+//rate found at: http://www.miloslick.com/EnergyLogger_files/State_Electricity_and_Emissions_Rates.pdf
 var co2_conversion = 1.155;
 //variable that holds pageload timestamp
 var startTime;
@@ -36,44 +37,87 @@ function getData(url){
 		cache: false
 	  })
 		 .done(function(data) {
+			console.log(Date.now());
 			console.log(data);
-			newData.date = data.data[4].time;//Date.now();
-			newData.status = checkStatus(parseInt(data.data[2].sampleValue));
-			newData.acVoltage = data.data[5].avg; //data.inverter_ac_voltage;
-			newData.acFrequency = data.data[7].sampleValue;
-			newData.dcCurrent = data.data[6].avg; //data.inverter_dc_current;
-			newData.dcVoltage = data.inverter_dc_voltage;
-			newData.outputPower = data.data[4].avg; //data.inverter_output_power;
-			newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
-			diffTime = newData.date - startTime;
-			console.log(newData.date);
-			//update gauge
-			gauge.setValue(newData.outputPower/1000);
 		
-			//update historical object		
-			plotData.updateArray(Date.now(), newData.outputPower/1000);
-			plotData.updateTotalKwh(Math.round(newData.energy_produced), co2_conversion);
-						
-			/*var total = plotData.plotArray.map(function(v) { return v[1] })         // second value of each
-    			.reduce(function(a,b) { return a + b });  // sum*/
-			//plotData.updateSinceLoad(diffTime);
-			//console.log(total);
-			//load values into page 
-			$("#total-kWh").html('<i class="fa fa-leaf"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
-			$("#total-co2").html('<i class="fa fa-trash"></i> ' +plotData.totalCo2+" tons");
-			$("#currentOutput").text(newData.outputPower.toLocaleString());
-			$("#runningState").text(newData.status);
-			$("#acFrequency").text(" @ "+newData.acFrequency+" Hz");	
-			$("#acVoltage").text(newData.acVoltage+" VAC");
-			$("#dcCurrent").text(" @ "+newData.dcCurrent+" amps");
+		//date
+			if(data.data[4].time != undefined){
+				newData.date = data.data[4].time;
+				diffTime = newData.date - startTime;
+				console.log(newData.date);
+			}
+		//status
+			if(data.data[2].sampleValue != undefined){
+				newData.status = checkStatus(parseInt(data.data[2].sampleValue));
+				$("#runningState").text(newData.status);
+
+			}
+		//ac voltage
+			if(data.data[5].avg != undefined){
+				newData.acVoltage = data.data[5].avg;
+				$("#acVoltage").text(newData.acVoltage+" VAC");
+
+			}
+		//ac Frequency
+			if(data.data[7].sampleValue != undefined){
+				newData.acFrequency = data.data[7].sampleValue;
+				$("#acFrequency").text(" @ "+newData.acFrequency+" Hz");	
+
+			}
+		//dc current
+			if(data.data[6].avg != undefined){
+				newData.dcCurrent = data.data[6].avg; 
+				$("#dcCurrent").text(" @ "+newData.dcCurrent+" amps");
+
+			}
+		//dc voltage
+			if(data.data[3].avg != undefined){
+				newData.dcVoltage = data.data[3].avg; 
+				$("#dcVoltage").text(newData.dcVoltage+" VDC ");
+
+			}
+		//output power
+			if(data.data[4].avg != undefined){
+				newData.outputPower = data.data[4].avg; //data.inverter_output_power;
+				
+				//update gauge
+				gauge.setValue(newData.outputPower/1000);
+				
+				$("#currentOutput").text(newData.outputPower.toLocaleString());
+				
+				if(data.data[4].time != undefined){
+					plotData.updateArray(newData.date, newData.outputPower/1000);
+				}
+				else{
+					plotData.updateArray(Date.now(), newData.outputPower/1000);
+				}
+	
+			}
+		//energy produced
+			if(data.data[12].sampleValue != undefined){
+				newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
+				plotData.updateTotalKwh(Math.round(newData.energy_produced), co2_conversion);
+
+				$("#total-kWh").html('<i class="fa fa-leaf"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
+				$("#total-co2").html('<i class="fa fa-trash"></i> ' +plotData.totalCo2+" tons");
+
+				
+			}
 		
+		
+			//elapsed time
 			console.log(newData.date-startTime);
+		
+			//format ticks based on elapsed time - prevents crowding of labels on graph
 			formatTicks();
+		
 			//update flot diagram		
 			plot.setData([plotData.plotArray]);
 			plot.setupGrid(); 
 			plot.draw();
 			console.log(newData);
+			console.log(Date.now());
+
 		 })
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
@@ -91,12 +135,13 @@ function getHistorical(url){
 		cache: false
 	  })
 		 .done(function(data) {
+			//gets date in time format of the json field
 			today = getToday();
 			for(var key in data.summary_stats){
 				console.log(key);
 				if(data['summary_stats'][key]['day'] == today){
 					$('#historicalEnergy').text(Math.round(data['summary_stats'][key]['output_power_avg']).toLocaleString()+" watts");	
-						break;
+					break;
 				}
 			}
 			console.log(today);
@@ -211,11 +256,11 @@ function checkStatus(systemState){
 
 //Constructs and draws the gauge
 function showGauge() {
-
+	var height = screen.height*.3;
 	gauge = new Gauge({
 		renderTo    : 'gauge',
-		width       : 400,
-		height      : 400,
+		width       : height,
+		height      : height,
 		glow        : false,
 		units       : 'kW',
 		title       : 'Output Power',
@@ -226,7 +271,7 @@ function showGauge() {
 		strokeTicks : true,
 		highlights  : [
 			{ from : 0,   to : 10, color : 'rgba(0,   0, 0, .0)' },
-			{ from : 10, to : 14, color : 'green' }
+			{ from : 10, to : 14, color : 'rgba(0,   0, 0, .0)' }
 		],
 		animation : {
 			delay    : 0,
@@ -251,8 +296,8 @@ function showGauge() {
 //constructs and draws plot
 function constructPlot() {
 	startTime = Date.now();
-	var height = $("#flot").parent().height();
-	$("#flot").height(height-50+"px");
+	var height = screen.height;
+	$("#flot").height(Math.round(height*.50)+"px");
 	var data = [ ];
 	var options = {
 		colors: ["green"],
@@ -262,11 +307,6 @@ function constructPlot() {
 			color: "green",
 			fillColor: 'rgba(0, 255, 0, 0.60)',
 			lineWidth: 3
-		},
-		points: {
-			show: true,
-			fill: 1,
-			fillColor: "green"
 		},
 		xaxis: {
 			show: true,

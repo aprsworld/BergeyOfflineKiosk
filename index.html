@@ -1,6 +1,8 @@
 <html>
 <head>
+	
 <title>Kiosk</title>
+	
 	
 <link rel="stylesheet" href="fonts/font-awesome.min.css">
 	
@@ -40,16 +42,16 @@
 				<div class="panelDivider">
 					<h2> Current Power Readings </h2>
 					<div class="powerReadings">
-						<div class="powerReadingChild"><span class="powerLabel"> DC </span><span id="dcCurrent"> Loading... </span> </div>						
+						<div class="powerReadingChild"><span class="powerLabel"> DC </span><span id="dcVoltage"> Loading... </span> <span id="dcCurrent"></span> </div>						
 						<div class="powerReadingChild"><span class="powerLabel"> AC </span><span id="acVoltage"> Loading... </span> <span id="acFrequency"></span></div>
 					</div>
 				</div>
 			</div>
 			
 			<div class="nested-flex-item since-installation">
-				<h2> Total Energy Produced </h2>
+				<h2> Lifetime Kilowatt Hours</h2>
 				<span id="total-kWh">Loading...</span>
-				<h2> Total Prevented CO2 Waste</h2>
+				<h2> Lifetime Offset CO2 Waste</h2>
 				<span class="brown" id="total-co2">loading...</span>
 			</div>
 			<div class="nested-flex-item">
