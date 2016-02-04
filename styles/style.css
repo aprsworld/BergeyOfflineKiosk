@@ -235,15 +235,19 @@ h2{
 .axislabels{
 	color: #333;	
 }
-.logos{
+.logo1{
 	position: absolute;
 	right: 10;
 	bottom: 10;
-	width: 125px;
+	width: 67px;
 	height: 40px;
 	
 }
-.logos img{
-	float: left;
-	padding-left: 5px;
+.logo2{
+	position: absolute;
+	left: 10;
+	bottom: 10;
+	width: 48px;
+	height: 40px;
+	
 }
