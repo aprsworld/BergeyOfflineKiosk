@@ -209,35 +209,35 @@ function formatTicks(){
 	if(diffTime < 60000){
 		console.log(true);
 		plot.getOptions().xaxes[0].tickSize= [10, "second"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 10-second intervals';
+		plot.getOptions().xaxes[0].axisLabel = '10-second intervals';
 	}
 	else if(diffTime < (5*60000)){
 		plot.getOptions().xaxes[0].tickSize= [30, "second"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 30-second intervals';
+		plot.getOptions().xaxes[0].axisLabel = '30-second intervals';
 	}
 	else if(diffTime < (10*60000)){
 		plot.getOptions().xaxes[0].tickSize= [1, "minute"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 1-minute intervals';
+		plot.getOptions().xaxes[0].axisLabel = '1-minute intervals';
 	}
 	else if(diffTime < (60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [10, "minute"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 10-minute intervals';
+		plot.getOptions().xaxes[0].axisLabel = '10-minute intervals';
 	}
 	else if(diffTime < (6*60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [30, "minute"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 30-minute intervals';
+		plot.getOptions().xaxes[0].axisLabel = '30-minute intervals';
 	}
 	else if(diffTime < (24*60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [1, "hour"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 1-hour intervals';
+		plot.getOptions().xaxes[0].axisLabel = '1-hour intervals';
 	}
 	else if(diffTime < (2*24*60*60000)){
 		plot.getOptions().xaxes[0].tickSize= [4, "hour"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 4-hour intervals';
+		plot.getOptions().xaxes[0].axisLabel = '4-hour intervals';
 	}
 	else {
 		plot.getOptions().xaxes[0].tickSize= [12, "hour"];
-		plot.getOptions().xaxes[0].axisLabel = 'Elapsed Time: 12-hour intervals';
+		plot.getOptions().xaxes[0].axisLabel = '12-hour intervals';
 	}
 }
 
