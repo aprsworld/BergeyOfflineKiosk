@@ -78,7 +78,8 @@ historicalValues.prototype.updateArray = function(xVal, yVal) {
 
 historicalValues.prototype.updateTotalKwh = function(kwh, conversion){
 	this.totalKwHrs = kwh;
-	this.totalCo2 = Math.round(kwh*conversion/2204.62*100)/100;
+	this.totalCo2kg = Math.round(kwh*conversion*0.453592);
+	this.totalCo2 = Math.round(kwh*conversion/2000*100)/100;
 }
 
 historicalValues.prototype.updateSinceLoad = function(time){

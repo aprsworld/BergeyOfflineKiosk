@@ -98,12 +98,45 @@ function getData(url){
 				newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
 				plotData.updateTotalKwh(Math.round(newData.energy_produced), co2_conversion);
 
-				$("#total-kWh").html('<i class="fa fa-leaf"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
-				$("#total-co2").html('<i class="fa fa-trash"></i> ' +plotData.totalCo2+" tons");
-
-				
+				$("#total-kWh").html('<i class="fa fa-plug"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
+				$("#total-co2kg").html('<i class="fa fa-leaf"></i> ' +plotData.totalCo2kg.toLocaleString()+" kg");
+				$("#total-co2").html('<i class="fa fa-leaf"></i> ' +plotData.totalCo2+" tons");
+	
 			}
-		
+		//soft_grid
+			if(data.data[9].sampleValue !=undefined){
+				console.log(gauge);
+				
+				if(data.data[9].sampleValue != "0.0"){
+					$('#softGrid').children().text(data.data[9].sampleValue);
+					$('#softGrid').show();
+					gauge.updateConfig({
+					colors:{
+						plate      : 'red',
+						majorTicks : 'white',
+						minorTicks : 'white',
+						title      : 'white',
+						units      : 'white',
+						numbers    : 'white',
+						needle     : { start : 'rgba(255, 255, 255, 1)', end : 'rgba(255, 255, 255, .9)' }
+					}
+					});
+				}
+				else{
+					$('#softGrid').hide();
+					gauge.updateConfig({
+					colors:{
+						plate      : '#eee',
+						majorTicks : '#333',
+						minorTicks : '#333',
+						title      : '#333',
+						units      : '#333',
+						numbers    : '#333',
+						needle     : { start : 'rgba(30, 30, 30, 1)', end : 'rgba(30, 30, 30, .9)' }
+					}
+					});
+				}
+			}
 		
 			//elapsed time
 			console.log(newData.date-startTime);
@@ -117,7 +150,7 @@ function getData(url){
 			plot.draw();
 			console.log(newData);
 			console.log(Date.now());
-
+			data = null;
 		 })
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
@@ -256,7 +289,7 @@ function checkStatus(systemState){
 
 //Constructs and draws the gauge
 function showGauge() {
-	var height = screen.height*.3;
+	var height = screen.height*.28;
 	gauge = new Gauge({
 		renderTo    : 'gauge',
 		width       : height,
@@ -315,8 +348,8 @@ function constructPlot() {
 			timezone: "browser",
 			tickSize: [10, "second"],
 			timeformat: "%m/%d/%y <br> %h:%M:%S",
-			axisLabel: "Elapsed Time",
-			axisLabelUseCanvas: false,
+			axisLabel: "Elapsed Time (x-axis) ",
+			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 12,
 			axisLabelFontFamily: 'Verdana, Arial',
 			axisLabelPadding: 3
@@ -324,8 +357,8 @@ function constructPlot() {
 		yaxes: [{
 			show: true,
 			position: "left",
-			axisLabel: "Kilowatts",
-			axisLabelUseCanvas: false,
+			axisLabel: "Kilowatts (y-axis) ",
+			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 16,
 			axisLabelFontFamily: 'sans-serif',
 			max: 14,

@@ -8,7 +8,15 @@ body, html{
 	box-sizing: border-box;
 
 }
-
+.centered{
+	text-align: center;	
+	margin-left: auto;
+	margin-right: auto;
+}
+.inlineblock{
+	display: inline-block;
+	width: 100%;
+}
 .reveal .fa {
   font-family: 'FontAwesome';
   font-style: normal;
@@ -90,13 +98,15 @@ body, html{
 .nested-flex-item:nth-child(1) {
 	order: 1;
 	flex-grow: 1.0;
-	z-index: 2;
 	border-right: green 1px solid;
+	border-left: green 1px solid;
+
 }
 
 .nested-flex-item:nth-child(2) {
 	order: 2;
 	flex-grow: .5;
+
 }
 
 /* gauge flex item */
@@ -106,7 +116,14 @@ body, html{
     align-self: center;
     background-color: #ddd;
 	min-width: 320px;
-	border-right: green 1px solid;
+}
+#softGrid{
+	position: absolute;
+	color: red;
+	margin: 0 0 0 10px;
+	
+	display: none;
+	
 }
 #gauge{ 
 	display: block;
@@ -132,6 +149,7 @@ body, html{
 	min-width: 105px;
 	height: auto;
 	text-align: center;
+	
 }
 .powerReadingChild span:nth-child(1){
 	/*font-size: 30px;*/
@@ -184,13 +202,24 @@ h2{
 	/*font-size: 35px;*/
 	font-size: 3.2vh;
 }
-
-#total-kWh, #total-co2, #historicalEnergy{
+.nested-flex-item:nth-child(2) h2{
+	text-align:left;
+}
+#total-kWh, #total-co2,#total-co2kg{
 	display: block;
 	color: green;
 	/*font-size: 30px;*/
 	font-size:3.2vh;
-
+	margin-left: 5%;
+	font-weight: 700;
+	text-align: left;
+}
+#historicalEnergy{
+	display: block;
+	color: green;
+	/*font-size: 30px;*/
+	font-size:3.2vh;
+	margin-left: 10px;
 	font-weight: 700;
 	text-align: center;
 }
