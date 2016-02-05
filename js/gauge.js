@@ -309,7 +309,7 @@ var Gauge = function( config) {
 		}
 		this.isWaitingForInitialization = false;
 
-		drawValueBox();
+		//drawValueBox();
 		drawNeedle();
 
 		if (!imready) {

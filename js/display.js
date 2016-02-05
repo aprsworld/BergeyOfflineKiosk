@@ -40,20 +40,22 @@ function getData(url){
 			console.log(Date.now());
 			console.log(data);
 		
+	//if data exists from json
+		if(data.data.length > 0){
 		//date
-			if(data.data[4].time != undefined){
+			if (typeof data.data[4].time !== "undefined"){	
 				newData.date = data.data[4].time;
 				diffTime = newData.date - startTime;
 				console.log(newData.date);
 			}
 		//status
-			if(data.data[2].sampleValue != undefined){
+			if(typeof data.data[2].sampleValue !== "undefined"){
 				newData.status = checkStatus(parseInt(data.data[2].sampleValue));
 				$("#runningState").text(newData.status);
 
 			}
 		//ac voltage
-			if(data.data[5].avg != undefined){
+			if(typeof data.data[5].avg !== "undefined"){
 				newData.acVoltage = data.data[5].avg;
 				$("#acVoltage").text(newData.acVoltage+" VAC");
 
@@ -83,7 +85,7 @@ function getData(url){
 				//update gauge
 				gauge.setValue(newData.outputPower/1000);
 				
-				$("#currentOutput").text(newData.outputPower.toLocaleString());
+				$("#currentOutput").text(newData.outputPower.toLocaleString()+" watts");
 				
 				if(data.data[4].time != undefined){
 					plotData.updateArray(newData.date, newData.outputPower/1000);
@@ -98,9 +100,9 @@ function getData(url){
 				newData.energy_produced = data.data[12].sampleValue; //data.inverter_energy_produced;
 				plotData.updateTotalKwh(Math.round(newData.energy_produced), co2_conversion);
 
-				$("#total-kWh").html('<i class="fa fa-plug"></i> '+plotData.totalKwHrs.toLocaleString()+" kWh");
-				$("#total-co2kg").html('<i class="fa fa-leaf"></i> ' +plotData.totalCo2kg.toLocaleString()+" kg");
-				$("#total-co2").html('<i class="fa fa-leaf"></i> ' +plotData.totalCo2+" tons");
+				$("#total-kWh").html(''+plotData.totalKwHrs.toLocaleString()+" kWh");
+				$("#total-co2kg").html('' +plotData.totalCo2kg.toLocaleString()+" kg");
+				$("#total-co2").html('' +plotData.totalCo2+" tons");
 	
 			}
 		//soft_grid
@@ -108,7 +110,7 @@ function getData(url){
 				console.log(gauge);
 				
 				if(data.data[9].sampleValue != "0.0"){
-					$('#softGrid').children().text(data.data[9].sampleValue);
+					$('#softGrid').children().text("active");
 					$('#softGrid').show();
 					gauge.updateConfig({
 					colors:{
@@ -137,7 +139,13 @@ function getData(url){
 					});
 				}
 			}
-		
+		}
+		else{
+			$("#runningState").text("No Data Received");
+			$("#runningState").css("color", "brown");
+		}
+		//end if data block
+
 			//elapsed time
 			console.log(newData.date-startTime);
 		
@@ -297,7 +305,7 @@ function checkStatus(systemState){
 
 //Constructs and draws the gauge
 function showGauge() {
-	var height = screen.height*.28;
+	var height = screen.height*.35;
 	gauge = new Gauge({
 		renderTo    : 'gauge',
 		width       : height,
@@ -327,7 +335,10 @@ function showGauge() {
 			units      : '#333',
 			numbers    : '#333',
 			needle     : { start : 'rgba(30, 30, 30, 1)', end : 'rgba(30, 30, 30, .9)' }
-		}
+		},
+		valueBox: {
+            visible: false
+        }
 	});
 
 	gauge.draw();
@@ -356,7 +367,7 @@ function constructPlot() {
 			timezone: "browser",
 			tickSize: [10, "second"],
 			timeformat: "%m/%d/%y <br> %h:%M:%S",
-			axisLabel: "Elapsed Time (x-axis) ",
+			axisLabel: "",
 			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 12,
 			axisLabelFontFamily: 'Verdana, Arial',
@@ -365,7 +376,7 @@ function constructPlot() {
 		yaxes: [{
 			show: true,
 			position: "left",
-			axisLabel: "Kilowatts (y-axis) ",
+			axisLabel: "output power kilowatts ",
 			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 16,
 			axisLabelFontFamily: 'sans-serif',

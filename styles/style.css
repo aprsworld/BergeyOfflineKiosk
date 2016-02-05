@@ -23,18 +23,32 @@ body, html{
 }
 
 .flotTitle{
-	min-width: 320px;
-	width: 33%;
-	height: auto;
+	 /* fixed position a zero-height full width container */
+    position: absolute;
+    top: 0; /* or whatever position is desired */
+    left: 0;
+    right: 0;
+    height: 0;
+    /* center all inline content */
+    text-align: center;
+	
 }
 .flotTitle h1{
 	margin: 0;
-	padding: 5px;
 	color: #333;
 	/*font-size: 36px;*/
-	font-size: 3.2vh;
+	font-size: 5.2vh;
+	/* make the block inline */
+    display: inline-block;
+    /* reset container's center alignment */
+    text-align: left;
+}
+.status-bar{
+	width: 100%;
+		height: 25px;
 }
 #status{
+	display: block;
 	padding: 5px;
 	width: auto;
 	float: right;
@@ -59,7 +73,7 @@ body, html{
 
 /* flot chart flex */
 .flex-item:nth-child(1) {
-    order: 0;
+    order: 1;
     flex: 0 1 100%;
     align-self: auto;
     background-color: #eee;
@@ -78,7 +92,7 @@ body, html{
     justify-content: space-around;
     align-content: stretch;
    
-	order: 2;
+	order: 0;
     flex: 1 1 auto;
     align-self: center;
 	flex-basis: auto;
@@ -120,10 +134,13 @@ body, html{
 #softGrid{
 	position: absolute;
 	color: red;
-	margin: 0 0 0 10px;
-	
+	padding: 5px;
+	top: 33vh;
 	display: none;
-	
+	background-color: white;
+	box-shadow: 0px 0px 3px #333;
+	border: 1px solid #333;
+	margin: 0;
 }
 #gauge{ 
 	display: block;
@@ -201,6 +218,7 @@ h2{
 	margin-top: 2.6vh;	
 	/*font-size: 35px;*/
 	font-size: 3.2vh;
+	clear: both;
 }
 .nested-flex-item:nth-child(2) h2{
 	text-align:left;
@@ -214,7 +232,7 @@ h2{
 	font-weight: 700;
 	text-align: left;
 }
-#historicalEnergy{
+#historicalEnergy, #currentOutput{
 	display: block;
 	color: green;
 	/*font-size: 30px;*/
@@ -232,13 +250,16 @@ h2{
 .bold{
 	font-weight: 700;	
 }
+.green{
+	color: green;	
+}
 .axislabels{
 	color: #333;	
 }
 .logo1{
 	position: absolute;
 	right: 10;
-	bottom: 10;
+	top: 10;
 	width: 67px;
 	height: 40px;
 	
@@ -246,8 +267,40 @@ h2{
 .logo2{
 	position: absolute;
 	left: 10;
-	bottom: 10;
+	top: 10;
 	width: 48px;
 	height: 40px;
-	
+}
+.left-container{
+	width: auto;
+	height: auto;
+	float: left;
+	margin-left: 10px;
+}
+.statContainer{
+	white-space: nowrap;
+	height: auto;
+}
+.statContainer:before {
+	content: '';
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	margin-right: -0.25em; /* Adjusts for spacing */
+}
+.centered {
+  display: inline-block;
+  vertical-align: middle;
+}
+.fa-icon{
+	width: auto;
+	height: auto;
+	float: left;
+	margin-left: 10px;
+}
+.fa-icon i{
+	font-size: 4.4vh
+}
+.double{
+	margin-top:1.4vh;	
 }
