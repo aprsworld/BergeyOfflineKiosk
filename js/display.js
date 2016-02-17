@@ -15,11 +15,20 @@ var gauge = {};
 
 //plot object
 var plot = {};
-
+var host = getUrlVars()['json'];
 //URL
-var jsonURL = 'http://192.168.6.100:8080/data/now.json';
+
+var jsonURL;
+var historicalURL;
+if(host === 'undefined'){
+	jsonURL = 'http://localhost:8080/data/now.json';
+	historicalURL = 'http://localhost:8080/data/historyByDay.json';
+}
+else{
+	jsonURL = 'http://'+host+'/now.json';
+	historicalURL = 'http://'+host+'/historyByDay.json';
+}
 //historical URL
-var historicalURL = 'http://192.168.6.100:8080/data/historyByDay.json';
 //sets the conversion rate for kWh to tons of CO2
 //rate found at: http://www.miloslick.com/EnergyLogger_files/State_Electricity_and_Emissions_Rates.pdf
 var co2_conversion = 1.155;
@@ -30,6 +39,16 @@ var diffTime;
 //stores today timestamp
 var today;
 
+function getUrlVars() {
+    var vars = {};
+	//console.log(window.location.href);
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+    function(m,key,value) {
+      vars[key] = value;
+    });
+    return vars;
+  }
+
 //gets data from now.json
 function getData(url){
 	$.getJSON(url, {
@@ -37,8 +56,8 @@ function getData(url){
 		cache: false
 	  })
 		 .done(function(data) {
-			console.log(Date.now());
-			console.log(data);
+			//console.log(Date.now());
+			//console.log(data);
 		
 	//if data exists from json
 		if(data.data.length > 0){
@@ -46,7 +65,7 @@ function getData(url){
 			if (typeof data.data[4].time !== "undefined"){	
 				newData.date = data.data[4].time;
 				diffTime = newData.date - startTime;
-				console.log(newData.date);
+				//console.log(newData.date);
 			}
 		//status
 			if(typeof data.data[2].sampleValue !== "undefined"){
@@ -107,7 +126,7 @@ function getData(url){
 			}
 		//soft_grid
 			if(data.data[9].sampleValue !=undefined){
-				console.log(gauge);
+				//console.log(gauge);
 				
 				if(data.data[9].sampleValue != "0.0"){
 					$('#softGrid').children().text("active");
@@ -147,7 +166,7 @@ function getData(url){
 		//end if data block
 
 			//elapsed time
-			console.log(newData.date-startTime);
+			//console.log(newData.date-startTime);
 		
 			//format ticks based on elapsed time - prevents crowding of labels on graph
 			formatTicks();
@@ -156,16 +175,16 @@ function getData(url){
 			plot.setData([plotData.plotArray]);
 			plot.setupGrid(); 
 			plot.draw();
-			console.log(newData);
-			console.log(Date.now());
+			//console.log(newData);
+			//console.log(Date.now());
 			data = null;
 		 })
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
-			console.log( "Request Failed: " + err);
+			//console.log( "Request Failed: " + err);
 		})
 		.always(function() {
-			console.log("completed");
+			//console.log("completed");
 		});
 }
 
@@ -179,22 +198,22 @@ function getHistorical(url){
 			//gets date in time format of the json field
 			today = getToday();
 			for(var key in data.summary_stats){
-				console.log(key);
+				//console.log(key);
 				if(data['summary_stats'][key]['day'] == today){
 					$('#historicalEnergy').text(Math.round(data['summary_stats'][key]['output_power_avg']).toLocaleString()+" watts");	
 					break;
 				}
 			}
-			console.log(today);
-			console.log(data);
+			//console.log(today);
+			//console.log(data);
 			
 		 })
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
-			console.log( "Request Failed: " + err);
+			//console.log( "Request Failed: " + err);
 		})
 		.always(function() {
-			console.log("completed");
+			//console.log("completed");
 		});
 }
 Date.prototype.yyyymmdd = function() {
@@ -215,7 +234,7 @@ function getToday(){
 function formatTicks(){
 	
 	if(diffTime < 60000){
-		console.log(true);
+		//console.log(true);
 		plot.getOptions().xaxes[0].tickSize= [10, "second"];
 		plot.getOptions().xaxes[0].axisLabel = '10-second intervals';
 	}
@@ -349,7 +368,7 @@ function showGauge() {
 function constructPlot() {
 	startTime = Date.now();
 	var height = screen.height;
-	$("#flot").height(Math.round(height*.50)+"px");
+	$("#flot").height(Math.round(height*.40)+"px");
 	var data = [ ];
 	var options = {
 		colors: ["green"],
@@ -376,7 +395,7 @@ function constructPlot() {
 		yaxes: [{
 			show: true,
 			position: "left",
-			axisLabel: "output power kilowatts ",
+			axisLabel: "Output Power Kilowatts ",
 			axisLabelUseCanvas: true,
 			axisLabelFontSizePixels: 16,
 			axisLabelFontFamily: 'sans-serif',
@@ -400,7 +419,7 @@ function constructPlot() {
 
 $(document).ready(function() {
 	constructPlot();
-	console.log(startTime);
+	//console.log(startTime);
 	getData(jsonURL);
 	getHistorical(historicalURL)
 	setInterval(function() {getData(jsonURL)},10000);
