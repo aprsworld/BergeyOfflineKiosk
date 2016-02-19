@@ -21,8 +21,8 @@ var host = getUrlVars()['json'];
 var jsonURL;
 var historicalURL;
 if(typeof host === 'undefined'){
-	jsonURL = 'http://localhost:8080/data/now.json';
-	historicalURL = 'http://localhost:8080/data/historyByDay.json';
+	jsonURL = 'http://127.0.0.1/data/now.json';
+	historicalURL = 'http://127.0.0.1/data/historyByDay.json';
 }
 else{
 	jsonURL = 'http://'+host+'/now.json';
